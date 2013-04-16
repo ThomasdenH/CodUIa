@@ -1,0 +1,42 @@
+UISystem = class()
+
+function UISystem:init()
+    self.allviews = {}
+    self.theme = Thema()
+    self.meldingen = {}
+end
+
+function UISystem:addNotification(notification)
+    table.insert(self.meldingen, notification)
+end
+
+function UISystem:makeView(name, logic)
+    local tempview = View(name, logic, self.theme)
+    self.allviews[name] = tempview
+end
+
+function UISystem:setDefaultTheme(theme)
+    self.theme = theme
+end
+
+function UISystem:setView(name)
+    self.currentView = self.allviews[name]
+end
+
+function UISystem:getView(name)
+    return self.allviews[name]
+end
+
+function UISystem:draw()
+    self.currentView:draw()
+    for y, u in pairs(self.meldingen) do
+       u:draw()
+        if u.tijd > 80 then
+            table.remove(self.meldingen, y)
+        end
+    end
+end
+
+function UISystem:touched(touch)
+    self.currentView:touched(touch)
+end
