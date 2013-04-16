@@ -1,0 +1,639 @@
+--# Button
+Button = class()
+
+function Buttoninit(x, y, textt, over)
+    --Set the function that executes when the button is pressed
+    self.overrideTouched = over or function() end
+    --Set the location
+    self.x = x
+    self.y = y
+    self.textt = textt
+    fontSize(40)
+    textWrapWidth(0)
+    self.width, self.height = textSize(self.textt)
+    self.width = self.width + 20
+    self.height = self.height + 10
+    self.touchedd = false
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = true
+    
+    self.meshh = mesh()
+    self.meshi = mesh()
+    self.meshh.vertices = {vec2(self.x, self.y), 
+                            vec2(self.x, self.y + self.height), 
+                            vec2(self.x + self.width, self.y + self.height)}
+    self.meshi.vertices = {vec2(self.x, self.y), 
+                            vec2(self.x + self.width, self.y), 
+                            vec2(self.x + self.width, self.y + self.height)}                     
+    selfupdateColor()
+    self.shadowMesh = mesh()
+    self.shadowMesh.vertices = {vec2(self.x, self.y + self.height),
+                                vec2(self.x, self.y + self.height - 30),
+                                vec2(self.x - 20, self.y + self.height - 30),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x, self.y + self.height - 30),
+                                vec2(self.x - 20, self.y + self.height - 30),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x, self.y + self.height - 30),
+                                vec2(self.x, self.y),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x + self.width - 20, self.y),
+                                vec2(self.x, self.y),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x + self.width - 20, self.y),
+                                vec2(self.x + self.width - 20, self.y - 30),
+                                
+                                vec2(self.x + self.width, self.y),
+                                vec2(self.x + self.width - 20, self.y),
+                                vec2(self.x + self.width - 20, self.y - 30),
+                                }
+    self.shadowMesh.colors = {color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,30),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,30),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                            }
+    
+end
+
+function Buttondraw()
+    pushStyle()
+    textWrapWidth(0)
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    fontSize(40)
+    self.shadowMeshdraw()
+    if self.touchedd == true then
+        fill(self.thema.kleur2)
+        rect(self.x, self.y, self.width, self.height)
+        fill(self.thema.textKleurmix(color(255,255,255), 0.9))
+    else
+        fill(0, 0, 0, 0)
+        self.meshhdraw()
+        self.meshidraw()
+        rect(self.x, self.y, self.width, self.height)
+        fill(self.thema.textKleur)
+    end
+    --MESHSHIZZLEWIZZLE
+   
+    
+    text(self.textt, self.x + self.width  2, self.y + self.height  2)
+    popStyle()
+end
+
+function ButtonsetTouched(touched)
+    self.touchedd = touched
+end
+
+function ButtonupdateColor()
+    local temptheme = self.thema or Thema()
+    self.meshh.colors = {temptheme.kleur2, 
+                        temptheme.kleur2mix(color(255,255,255), 0.8),
+                        temptheme.kleur2mix(color(255,255,255), 0.5),        
+                        }
+    self.meshi.colors = {temptheme.kleur2,                   
+                        temptheme.kleur2, 
+                        temptheme.kleur2mix(color(255,255,255), 0.5)}
+end
+
+function Buttontouched(touch)
+    if touch.state == BEGAN then
+        self.touchedd = true
+    elseif touch.state == MOVING then
+        self.touchedd = true
+    else
+        if self.touchedd == true then
+            self.overrideTouched()
+            self.touchedd = false
+        end
+    end
+end
+
+function ButtonsetTheme(theme)
+    self.thema = theme
+    selfupdateColor()
+end
+--# Image
+Image = class()
+
+function Imageinit(x, y, theImage, width, smooth)
+    -- you can accept and set parameters here
+    self.x = x
+    self.y = y
+    self.width = theImage.width
+    self.height = theImage.height
+    self.theImage = theImage
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = false
+    if width == nil then else
+    self.width = width
+    self.height = nil
+    self.smooth = smooth
+    end
+    
+end
+
+function ImagesetImage(theImage)
+    self.theImage = theImage
+end
+
+function ImagesetLocation(x, y)
+    self.x = x
+    self.y = y
+end
+
+function ImagesetSmooth(smooth)
+    self.smooth = smooth
+end
+
+function ImageupdateColor()
+
+end
+
+function Imagedraw()
+    pushStyle()
+    if self.smooth == nil then else
+        noSmooth()
+    end
+    spriteMode(CORNER)
+    sprite(self.theImage, self.x, self.y, self.width)
+    popStyle()
+end
+
+function ImagesetTheme(theme)
+    self.thema = theme
+    selfupdateColor()
+end
+--# Main
+-- Wiskunde
+
+function setup()
+    uis = UISystem()
+    uismakeView(Main)
+    s = Melding(Hallo!)
+    local rect = Tekst(100, 100, Hallo, 50)
+    uisgetView(Main)addElement(rect, naam, true)
+    
+    
+    
+    uissetView(Main)
+end
+
+-- This function gets called once every frame
+function draw()
+    uisdraw()
+end
+
+function touched(touch)
+    uistouched(touch)
+end
+
+function keyboard(key)
+    uiskeyboard(key)
+end
+--# Melding
+Melding = class()
+
+function Meldinginit(tekst)
+    -- you can accept and set parameters here
+    self.tekst = tekst
+    self.tijd = 0
+    self.maximum = 80
+    fontSize(40)
+    self.width, self.height = textSize(self.tekst)
+end
+
+function Meldingdraw()
+    self.tijd = self.tijd + 1
+    pushStyle()
+    fontSize(40)
+    rectMode(CENTER)
+    if self.tijd  20 then
+        fill(43,43,43, self.tijd  20  255)
+    elseif self.maximum - self.tijd  20 then
+        fill(43,43,43, (self.maximum - self.tijd)20  255)
+    else
+        fill(43, 43, 43, 255)
+    end
+    rect(WIDTH  2,300,self.width + 30,self.height + 30)
+    
+    if self.tijd  20 then
+        fill(230,230,230, self.tijd  20  255)
+    elseif self.maximum - self.tijd  20 then
+        fill(230,230,230, (self.maximum - self.tijd)20  255)
+    else
+        fill(230,230,230, 255)
+    end
+    text(self.tekst, WIDTH  2, 300)
+    popStyle()
+end
+
+function Meldingtouched(touch)
+    -- Codea does not automatically call this method
+end
+
+--# Scroller
+Scroller = class()
+
+function Scrollerinit(x, y, width, height, textt)
+    self.x = x
+    self.y = y
+    self.textt = textt
+    self.width = width
+    self.height = height
+    textWrapWidth(self.width - 20)
+    fontSize(20)
+    self.textWidth, self.textHeight = textSize(textt)
+    fontSize(20)
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = true
+    self.scrollAmount = 0
+    self.scrollerImage = image(self.width - 10,self.height - 10)
+end
+
+function Scrollerdraw()
+    pushStyle()
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    textWrapWidth(self.width - 20)
+    fontSize(20)
+    fill(self.thema.kleur2)
+    rect(self.x, self.y, self.width, self.height)
+    fill(self.thema.textKleur)
+    setContext(self.scrollerImage)
+    background(0,0,0,0)
+    textMode(CORNER)
+    text(self.textt, 10, self.scrollAmount + self.height - self.textHeight - 5)
+    setContext()
+    spriteMode(CORNER)
+    sprite(self.scrollerImage, self.x, self.y + 5)
+    popStyle()
+end
+
+function ScrollersetTouched()
+end
+
+function Scrollertouched(touch)
+    self.scrollAmount = self.scrollAmount + touch.deltaY
+    if self.scrollAmount  0 then
+        self.scrollAmount = 0
+    elseif self.scrollAmount  self.textHeight - 20 then
+        self.scrollAmount = self.textHeight - 20
+    end
+end
+
+function ScrollersetTheme(theme)
+    self.thema = theme
+end
+
+--# Tekst
+Tekst = class()
+
+function Tekstinit(x, y, string, size)
+    -- you can accept and set parameters here
+    self.overrideTheme = false
+    self.x = x
+    self.y = y
+    self.string = string
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = false
+    if size == nil then
+        self.size = 40
+    else
+        self.size = size
+    end
+    fontSize(self.size)
+    textWrapWidth(WIDTH - self.x - 25)
+    self.width, self.height = textSize(string)
+end
+
+function setCenter(center)
+    self.center = center
+end
+
+function setColor(col)
+    self.kleur = col
+end
+
+function Tekstdraw()
+    pushStyle()
+    fontSize(self.size)
+    if self.center == true then
+        textMode(CENTER)
+        fill(self.thema.textKleurmix(color(255,255,255), 0.5))
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y - 1)
+    else
+        textMode(CORNER)
+        fill(self.thema.textKleurmix(color(255,255,255), 0.5))
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y - self.height  2 - 1)
+    end
+    
+    if self.center == true then
+        textMode(CENTER)
+        if self.kleur == nil then
+            fill(self.thema.textKleur)
+        else
+            fill(self.kleur)
+        end
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y)
+    else
+        textMode(CORNER)
+        if self.kleur == nil then
+            fill(self.thema.textKleur)
+        else
+            fill(self.kleur)
+        end
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y - self.height  2)
+    end
+    popStyle()
+end
+
+function TekstsetTheme(theme)
+    self.thema = theme
+end
+--# Tekstvak
+Tekstvak = class()
+
+function Tekstvakinit(x, y, width, height, over, default)
+    -- you can accept and set parameters here
+    if over == nil then
+        over = function() end
+    end
+    if default == nil then
+        self.default = 
+    else
+        self.default = default
+    end
+    self.canType =true
+    self.overrideTouched = over
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
+    self.touchedd = false
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = true
+    self.textt = self.default
+    self.over = over
+end
+
+function TekstvaksetTheme(theme)
+    self.thema = theme
+end
+
+function Tekstvakdraw()
+    pushStyle()
+    textWrapWidth(0)
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    fontSize(self.height - 10)
+    textMode(CORNER)
+    fill(self.thema.kleur2)
+    rect(self.x, self.y, self.width, self.height)
+    fill(self.thema.textKleur)
+    text(self.textt, self.x + 10, self.y + 3)
+    
+    if self.touchedd == true then
+        if isKeyboardShowing() then
+            text(self.textt .. , self.x + 10, self.y + 3)
+        end
+    end
+    popStyle()
+    selfover(self)
+end
+
+function TekstvaksetTouched(touched)
+    self.touchedd = touched
+    if self.touched == false then
+        hideKeyboard()
+    end
+end
+
+function Tekstvaktouched(touch)
+    if touch.state == BEGAN then
+        self.touchedd = true
+        showKeyboard()
+    elseif touch.state == MOVING then
+        self.touchedd = true
+    end
+    if self.textt == self.default then
+        self.textt = 
+    end
+end
+
+function Tekstvakkeyboard(key)
+    if self.touchedd == true then
+    self.textt = self.textt .. key
+    if key == RETURN then 
+        hideKeyboard() 
+        self.textt = string.sub(self.textt, 1, -2)
+    end
+    if key == BACKSPACE then 
+        self.textt = string.sub(self.textt, 1, -2) 
+    end
+    end
+end
+
+--# Toolbar
+Toolbar = class()
+
+function Toolbarinit(titel, thema)
+    self.thema = thema
+    self.colorupdatable = true
+    self.titel = titel
+    self.touchable = false
+    self.meshh = mesh()
+    self.meshhaddRect(WIDTH  2,HEIGHT - 25,WIDTH, 50)                  
+    self.meshh.colors = {self.thema.kleur2mix(color(255,255,255), 0.8), 
+                        self.thema.kleur2,
+                        self.thema.kleur2,  
+                        self.thema.kleur2mix(color(255,255,255), 0.8),                   
+                        self.thema.kleur2,
+                        self.thema.kleur2mix(color(255,255,255), 0.5)
+    }
+end
+
+function Toolbardraw()
+    -- Codea does not automatically call 
+    pushStyle()
+    textWrapWidth(0)
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    fontSize(40)
+    fill(0,0,0,0)
+    self.meshhdraw()
+    rect(0, HEIGHT - 50, WIDTH, HEIGHT)
+    fill(self.thema.textKleur)
+    text(self.titel, WIDTH  2, HEIGHT - 20)
+    popStyle()
+end
+
+function Toolbartouched(touch)
+    -- Codea does not automatically call this method
+end
+
+--# View
+View = class()
+
+function Viewinit(titel, logic, thema)
+    self.thema = thema
+    self.elements = {}
+    self.toolbar = Toolbar(titel, self.thema)
+    self.achtergrond = mesh()
+    self.achtergrondaddRect(WIDTH  2, HEIGHT  2, WIDTH, HEIGHT)
+    self.achtergrond.colors = {self.thema.achtergrond,
+                                self.thema.achtergrondmix(color(0,0,0,0), 0.6),
+                                self.thema.achtergrondmix(color(0,0,0,0), 0.6),
+                                self.thema.achtergrond,
+                                self.thema.achtergrondmix(color(0,0,0,0), 0.6),
+                                self.thema.achtergrond
+                                }
+    if logic == nil then
+        self.logic = function() end
+    else
+        self.logic = logic
+    end
+end
+
+function ViewgetElement(plaats)
+    return self.elements[plaats]
+end
+
+function ViewaddElement(element, plaats)
+    if element.theme == nil then
+        elementsetTheme(self.thema)
+    end
+    if plaats == nil then
+        table.insert(self.elements, element)
+    else
+        self.elements[plaats] = element
+    end
+end
+
+function ViewsetTheme(theme)
+    self.thema = theme
+    for number, element in pairs(self.elements) do
+        elementsetTheme(theme)
+    end
+end
+
+function ViewgetTheme()
+    return self.thema
+end
+
+function Viewdraw()
+    self.achtergronddraw()
+    self.toolbardraw()
+    for value, e in pairs(self.elements) do
+        edraw()
+    end
+    self.logic(self)
+end
+
+function Viewtouched(touch)
+    
+    for value, e in pairs(self.elements) do
+        if e.touchable == true then
+            if touch.x  e.x and
+                touch.x  e.x + e.width and
+                touch.y  e.y and
+                touch.y  e.y + e.height then
+                    etouched(touch)
+            else
+                esetTouched(false)
+            end
+        end
+    end
+end
+
+function Viewkeyboard(key)
+    for value, thinge in pairs(self.elements) do
+        if thinge.canType == true then
+            thingekeyboard(key)
+        end
+    end
+end
+
+--# UISystem
+UISystem = class()
+
+function UISysteminit()
+    self.allviews = {}
+    self.theme = Thema()
+    self.meldingen = {}
+end
+
+function UISystemaddNotification(notification)
+    table.insert(self.meldingen, notification)
+end
+
+function UISystemmakeView(name, logic)
+    local tempview = View(name, logic, self.theme)
+    self.allviews[name] = tempview
+end
+
+function UISystemsetDefaultTheme(theme)
+    self.theme = theme
+end
+
+function UISystemsetView(name)
+    self.currentView = self.allviews[name]
+end
+
+function UISystemgetView(name)
+    return self.allviews[name]
+end
+
+function UISystemdraw()
+    self.currentViewdraw()
+    for y, u in pairs(self.meldingen) do
+       udraw()
+        if u.tijd  80 then
+            table.remove(self.meldingen, y)
+        end
+    end
+end
+
+function UISystemtouched(touch)
+    self.currentViewtouched(touch)
+end
+--# Thema
+Thema = class()
+
+function Themainit(kleur1, kleur2, textKleur, achtergrond)
+    self.kleur1 = kleur1 or color(186, 49, 49, 255)
+    self.kleur2 = kleur2 or color(189, 161, 72, 255)
+    self.textKleur = textKleur or color(0, 0, 0, 255)
+    self.achtergrond= achtergrond or color(183, 174, 90, 255)
+end
