@@ -6,17 +6,20 @@ function Button:init(x, y, textt, over)
     --Set the location
     self.x = x
     self.y = y
+    --Set the text
     self.textt = textt
+    --Calculate size
     fontSize(40)
     textWrapWidth(0)
     self.width, self.height = textSize(self.textt)
     self.width = self.width + 20
     self.height = self.height + 10
+    --Not touched by default
     self.touchedd = false
-    rectMode(CORNER)
-    spriteMode(CORNER)
+    --touched() is being called
     self.touchable = true
     
+    --Make the meshes
     self.meshh = mesh()
     self.meshi = mesh()
     self.meshh.vertices = {vec2(self.x, self.y), 
@@ -24,8 +27,10 @@ function Button:init(x, y, textt, over)
                             vec2(self.x + self.width, self.y + self.height)}
     self.meshi.vertices = {vec2(self.x, self.y), 
                             vec2(self.x + self.width, self.y), 
-                            vec2(self.x + self.width, self.y + self.height)}                     
+                            vec2(self.x + self.width, self.y + self.height)}
+    --Set the colors for the mesh (seperate because theme can be changed)
     self:updateColor()
+    --Create the shadow mesh
     self.shadowMesh = mesh()
     self.shadowMesh.vertices = {vec2(self.x, self.y + self.height),
                                 vec2(self.x, self.y + self.height - 30),
