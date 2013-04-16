@@ -1,0 +1,80 @@
+View = class()
+
+function View:init(titel, logic, thema)
+    self.thema = thema
+    self.elements = {}
+    self.toolbar = Toolbar(titel, self.thema)
+    self.achtergrond = mesh()
+    self.achtergrond:addRect(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+    self.achtergrond.colors = {self.thema.achtergrond,
+                                self.thema.achtergrond:mix(color(0,0,0,0), 0.6),
+                                self.thema.achtergrond:mix(color(0,0,0,0), 0.6),
+                                self.thema.achtergrond,
+                                self.thema.achtergrond:mix(color(0,0,0,0), 0.6),
+                                self.thema.achtergrond
+                                }
+    if logic == nil then
+        self.logic = function() end
+    else
+        self.logic = logic
+    end
+end
+
+function View:getElement(plaats)
+    return self.elements[plaats]
+end
+
+function View:addElement(element, plaats)
+    if element.theme == nil then
+        element:setTheme(self.thema)
+    end
+    if plaats == nil then
+        table.insert(self.elements, element)
+    else
+        self.elements[plaats] = element
+    end
+end
+
+function View:setTheme(theme)
+    self.thema = theme
+    for number, element in pairs(self.elements) do
+        element:setTheme(theme)
+    end
+end
+
+function View:getTheme()
+    return self.thema
+end
+
+function View:draw()
+    self.achtergrond:draw()
+    self.toolbar:draw()
+    for value, e in pairs(self.elements) do
+        e:draw()
+    end
+    self.logic(self)
+end
+
+function View:touched(touch)
+    
+    for value, e in pairs(self.elements) do
+        if e.touchable == true then
+            if touch.x > e.x and
+                touch.x < e.x + e.width and
+                touch.y > e.y and
+                touch.y < e.y + e.height then
+                    e:touched(touch)
+            else
+                e:setTouched(false)
+            end
+        end
+    end
+end
+
+function View:keyboard(key)
+    for value, thinge in pairs(self.elements) do
+        if thinge.canType == true then
+            thinge:keyboard(key)
+        end
+    end
+end
