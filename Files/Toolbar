@@ -1,0 +1,36 @@
+Toolbar = class()
+
+function Toolbar:init(titel, thema)
+    self.thema = thema
+    self.colorupdatable = true
+    self.titel = titel
+    self.touchable = false
+    self.meshh = mesh()
+    self.meshh:addRect(WIDTH / 2,HEIGHT - 25,WIDTH, 50)                  
+    self.meshh.colors = {self.thema.kleur2:mix(color(255,255,255), 0.8), 
+                        self.thema.kleur2,
+                        self.thema.kleur2,  
+                        self.thema.kleur2:mix(color(255,255,255), 0.8),                   
+                        self.thema.kleur2,
+                        self.thema.kleur2:mix(color(255,255,255), 0.5)
+    }
+end
+
+function Toolbar:draw()
+    -- Codea does not automatically call 
+    pushStyle()
+    textWrapWidth(0)
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    fontSize(40)
+    fill(0,0,0,0)
+    self.meshh:draw()
+    rect(0, HEIGHT - 50, WIDTH, HEIGHT)
+    fill(self.thema.textKleur)
+    text(self.titel, WIDTH / 2, HEIGHT - 20)
+    popStyle()
+end
+
+function Toolbar:touched(touch)
+    -- Codea does not automatically call this method
+end
