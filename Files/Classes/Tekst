@@ -1,0 +1,69 @@
+Tekst = class()
+
+function Tekst:init(x, y, string, size)
+    -- you can accept and set parameters here
+    self.overrideTheme = false
+    self.x = x
+    self.y = y
+    self.string = string
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = false
+    if size == nil then
+        self.size = 40
+    else
+        self.size = size
+    end
+    fontSize(self.size)
+    textWrapWidth(WIDTH - self.x - 25)
+    self.width, self.height = textSize(string)
+end
+
+function setCenter(center)
+    self.center = center
+end
+
+function setColor(col)
+    self.kleur = col
+end
+
+function Tekst:draw()
+    pushStyle()
+    fontSize(self.size)
+    if self.center == true then
+        textMode(CENTER)
+        fill(self.thema.textKleur:mix(color(255,255,255), 0.5))
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y - 1)
+    else
+        textMode(CORNER)
+        fill(self.thema.textKleur:mix(color(255,255,255), 0.5))
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y - self.height / 2 - 1)
+    end
+    
+    if self.center == true then
+        textMode(CENTER)
+        if self.kleur == nil then
+            fill(self.thema.textKleur)
+        else
+            fill(self.kleur)
+        end
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y)
+    else
+        textMode(CORNER)
+        if self.kleur == nil then
+            fill(self.thema.textKleur)
+        else
+            fill(self.kleur)
+        end
+        textWrapWidth(WIDTH - self.x - 25)
+        text(self.string, self.x, self.y - self.height / 2)
+    end
+    popStyle()
+end
+
+function Tekst:setTheme(theme)
+    self.thema = theme
+end

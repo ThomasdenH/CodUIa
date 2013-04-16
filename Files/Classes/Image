@@ -1,0 +1,51 @@
+Image = class()
+
+function Image:init(x, y, theImage, width, smooth)
+    -- you can accept and set parameters here
+    self.x = x
+    self.y = y
+    self.width = theImage.width
+    self.height = theImage.height
+    self.theImage = theImage
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = false
+    if width == nil then else
+    self.width = width
+    self.height = nil
+    self.smooth = smooth
+    end
+    
+end
+
+function Image:setImage(theImage)
+    self.theImage = theImage
+end
+
+function Image:setLocation(x, y)
+    self.x = x
+    self.y = y
+end
+
+function Image:setSmooth(smooth)
+    self.smooth = smooth
+end
+
+function Image:updateColor()
+
+end
+
+function Image:draw()
+    pushStyle()
+    if self.smooth == nil then else
+        noSmooth()
+    end
+    spriteMode(CORNER)
+    sprite(self.theImage, self.x, self.y, self.width)
+    popStyle()
+end
+
+function Image:setTheme(theme)
+    self.thema = theme
+    self:updateColor()
+end

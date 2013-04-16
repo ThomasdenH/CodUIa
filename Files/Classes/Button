@@ -1,0 +1,137 @@
+Button = class()
+
+function Button:init(x, y, textt, over)
+    --Set the function that executes when the button is pressed
+    self.overrideTouched = over or function() end
+    --Set the location
+    self.x = x
+    self.y = y
+    self.textt = textt
+    fontSize(40)
+    textWrapWidth(0)
+    self.width, self.height = textSize(self.textt)
+    self.width = self.width + 20
+    self.height = self.height + 10
+    self.touchedd = false
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = true
+    
+    self.meshh = mesh()
+    self.meshi = mesh()
+    self.meshh.vertices = {vec2(self.x, self.y), 
+                            vec2(self.x, self.y + self.height), 
+                            vec2(self.x + self.width, self.y + self.height)}
+    self.meshi.vertices = {vec2(self.x, self.y), 
+                            vec2(self.x + self.width, self.y), 
+                            vec2(self.x + self.width, self.y + self.height)}                     
+    self:updateColor()
+    self.shadowMesh = mesh()
+    self.shadowMesh.vertices = {vec2(self.x, self.y + self.height),
+                                vec2(self.x, self.y + self.height - 30),
+                                vec2(self.x - 20, self.y + self.height - 30),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x, self.y + self.height - 30),
+                                vec2(self.x - 20, self.y + self.height - 30),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x, self.y + self.height - 30),
+                                vec2(self.x, self.y),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x + self.width - 20, self.y),
+                                vec2(self.x, self.y),
+                                
+                                vec2(self.x - 20, self.y - 30),
+                                vec2(self.x + self.width - 20, self.y),
+                                vec2(self.x + self.width - 20, self.y - 30),
+                                
+                                vec2(self.x + self.width, self.y),
+                                vec2(self.x + self.width - 20, self.y),
+                                vec2(self.x + self.width - 20, self.y - 30),
+                                }
+    self.shadowMesh.colors = {color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,30),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,30),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                                
+                                color(0,0,0,0), 
+                                color(0, 0, 0, 30), 
+                                color(0,0,0,0),
+                            }
+    
+end
+
+function Button:draw()
+    pushStyle()
+    textWrapWidth(0)
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    fontSize(40)
+    self.shadowMesh:draw()
+    if self.touchedd == true then
+        fill(self.thema.kleur2)
+        rect(self.x, self.y, self.width, self.height)
+        fill(self.thema.textKleur:mix(color(255,255,255), 0.9))
+    else
+        fill(0, 0, 0, 0)
+        self.meshh:draw()
+        self.meshi:draw()
+        rect(self.x, self.y, self.width, self.height)
+        fill(self.thema.textKleur)
+    end
+    --MESHSHIZZLEWIZZLE
+   
+    
+    text(self.textt, self.x + self.width / 2, self.y + self.height / 2)
+    popStyle()
+end
+
+function Button:setTouched(touched)
+    self.touchedd = touched
+end
+
+function Button:updateColor()
+    local temptheme = self.thema or Thema()
+    self.meshh.colors = {temptheme.kleur2, 
+                        temptheme.kleur2:mix(color(255,255,255), 0.8),
+                        temptheme.kleur2:mix(color(255,255,255), 0.5),        
+                        }
+    self.meshi.colors = {temptheme.kleur2,                   
+                        temptheme.kleur2, 
+                        temptheme.kleur2:mix(color(255,255,255), 0.5)}
+end
+
+function Button:touched(touch)
+    if touch.state == BEGAN then
+        self.touchedd = true
+    elseif touch.state == MOVING then
+        self.touchedd = true
+    else
+        if self.touchedd == true then
+            self.overrideTouched()
+            self.touchedd = false
+        end
+    end
+end
+
+function Button:setTheme(theme)
+    self.thema = theme
+    self:updateColor()
+end

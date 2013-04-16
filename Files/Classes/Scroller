@@ -1,0 +1,53 @@
+Scroller = class()
+
+function Scroller:init(x, y, width, height, textt)
+    self.x = x
+    self.y = y
+    self.textt = textt
+    self.width = width
+    self.height = height
+    textWrapWidth(self.width - 20)
+    fontSize(20)
+    self.textWidth, self.textHeight = textSize(textt)
+    fontSize(20)
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = true
+    self.scrollAmount = 0
+    self.scrollerImage = image(self.width - 10,self.height - 10)
+end
+
+function Scroller:draw()
+    pushStyle()
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    textWrapWidth(self.width - 20)
+    fontSize(20)
+    fill(self.thema.kleur2)
+    rect(self.x, self.y, self.width, self.height)
+    fill(self.thema.textKleur)
+    setContext(self.scrollerImage)
+    background(0,0,0,0)
+    textMode(CORNER)
+    text(self.textt, 10, self.scrollAmount + self.height - self.textHeight - 5)
+    setContext()
+    spriteMode(CORNER)
+    sprite(self.scrollerImage, self.x, self.y + 5)
+    popStyle()
+end
+
+function Scroller:setTouched()
+end
+
+function Scroller:touched(touch)
+    self.scrollAmount = self.scrollAmount + touch.deltaY
+    if self.scrollAmount < 0 then
+        self.scrollAmount = 0
+    elseif self.scrollAmount > self.textHeight - 20 then
+        self.scrollAmount = self.textHeight - 20
+    end
+end
+
+function Scroller:setTheme(theme)
+    self.thema = theme
+end

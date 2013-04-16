@@ -1,0 +1,39 @@
+Melding = class()
+
+function Melding:init(tekst)
+    -- you can accept and set parameters here
+    self.tekst = tekst
+    self.tijd = 0
+    self.maximum = 80
+    fontSize(40)
+    self.width, self.height = textSize(self.tekst)
+end
+
+function Melding:draw()
+    self.tijd = self.tijd + 1
+    pushStyle()
+    fontSize(40)
+    rectMode(CENTER)
+    if self.tijd < 20 then
+        fill(43,43,43, self.tijd / 20 * 255)
+    elseif self.maximum - self.tijd < 20 then
+        fill(43,43,43, (self.maximum - self.tijd)/20 * 255)
+    else
+        fill(43, 43, 43, 255)
+    end
+    rect(WIDTH / 2,300,self.width + 30,self.height + 30)
+    
+    if self.tijd < 20 then
+        fill(230,230,230, self.tijd / 20 * 255)
+    elseif self.maximum - self.tijd < 20 then
+        fill(230,230,230, (self.maximum - self.tijd)/20 * 255)
+    else
+        fill(230,230,230, 255)
+    end
+    text(self.tekst, WIDTH / 2, 300)
+    popStyle()
+end
+
+function Melding:touched(touch)
+    -- Codea does not automatically call this method
+end
