@@ -1,0 +1,82 @@
+Tekstvak = class()
+
+function Tekstvak:init(x, y, width, height, over, default)
+    -- you can accept and set parameters here
+    if over == nil then
+        over = function() end
+    end
+    if default == nil then
+        self.default = ""
+    else
+        self.default = default
+    end
+    self.canType =true
+    self.overrideTouched = over
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
+    self.touchedd = false
+    rectMode(CORNER)
+    spriteMode(CORNER)
+    self.touchable = true
+    self.textt = self.default
+    self.over = over
+end
+
+function Tekstvak:setTheme(theme)
+    self.thema = theme
+end
+
+function Tekstvak:draw()
+    pushStyle()
+    textWrapWidth(0)
+    stroke(self.thema.kleur1)
+    strokeWidth(5)
+    fontSize(self.height - 10)
+    textMode(CORNER)
+    fill(self.thema.kleur2)
+    rect(self.x, self.y, self.width, self.height)
+    fill(self.thema.textKleur)
+    text(self.textt, self.x + 10, self.y + 3)
+    
+    if self.touchedd == true then
+        if isKeyboardShowing() then
+            text(self.textt .. "|", self.x + 10, self.y + 3)
+        end
+    end
+    popStyle()
+    self:over(self)
+end
+
+function Tekstvak:setTouched(touched)
+    self.touchedd = touched
+    if self.touched == false then
+        hideKeyboard()
+    end
+end
+
+function Tekstvak:touched(touch)
+    if touch.state == BEGAN then
+        self.touchedd = true
+        showKeyboard()
+    elseif touch.state == MOVING then
+        self.touchedd = true
+    end
+    if self.textt == self.default then
+        self.textt = ""
+    end
+end
+
+function Tekstvak:keyboard(key)
+    if self.touchedd == true then
+    self.textt = self.textt .. key
+    if key == RETURN then 
+        hideKeyboard() 
+        self.textt = string.sub(self.textt, 1, -2)
+    end
+    if key == BACKSPACE then 
+        self.textt = string.sub(self.textt, 1, -2) 
+    end
+    end
+end
