@@ -1,0 +1,8 @@
+Thema = class()
+
+function Thema:init(kleur1, kleur2, textKleur, achtergrond)
+    self.kleur1 = kleur1 or color(186, 49, 49, 255)
+    self.kleur2 = kleur2 or color(189, 161, 72, 255)
+    self.textKleur = textKleur or color(0, 0, 0, 255)
+    self.achtergrond= achtergrond or color(183, 174, 90, 255)
+end
