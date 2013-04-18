@@ -190,32 +190,7 @@ function Image:setTheme(theme)
     self:updateColor()
 end
 --# Main
--- Wiskunde
 
-function setup()
-    uis = UISystem()
-    uis:makeView("Main")
-    s = Melding("Hallo!")
-    local rect = Tekst(100, 100, "Hallo", 50)
-    uis:getView("Main"):addElement(rect, "naam", true)
-    
-    local butt = Button(500, 400, "Melding", function() uis:addNotification("Hallo!") end)
-    uis:getView("Main"):addElement(butt)
-    uis:setView("Main")
-end
-
--- This function gets called once every frame
-function draw()
-    uis:draw()
-end
-
-function touched(touch)
-    uis:touched(touch)
-end
-
-function keyboard(key)
-    uis:keyboard(key)
-end
 --# Melding
 Melding = class()
 
@@ -641,4 +616,36 @@ function Thema:init(kleur1, kleur2, textKleur, achtergrond)
     self.kleur2 = kleur2 or color(189, 161, 72, 255)
     self.textKleur = textKleur or color(0, 0, 0, 255)
     self.achtergrond= achtergrond or color(183, 174, 90, 255)
+end
+
+function Thema:setColor1(color1)
+    self.kleur1 = color1
+end
+
+function Thema:setColor2(color2)
+    self.kleur2 = color2
+end
+
+function Thema:setTextColor(textColor)
+    self.textKleur = textColor
+end
+
+function Thema:setBackgroundColor(backgroundColor)
+    self.achtergrond = backgroundColor
+end
+
+function Thema:getColor1()
+    return self.kleur1
+end
+
+function Thema:getColor2()
+    return self.kleur2
+end
+
+function Thema:getTextColor()
+    return self.textKleur
+end
+
+function Thema:getBackgroundColor()
+    return self.achtergrond
 end
