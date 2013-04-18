@@ -6,3 +6,19 @@ function Thema:init(kleur1, kleur2, textKleur, achtergrond)
     self.textKleur = textKleur or color(0, 0, 0, 255)
     self.achtergrond= achtergrond or color(183, 174, 90, 255)
 end
+
+function Thema:setColor1(color1)
+    self.kleur1 = color1
+end
+
+function Thema:setColor2(color2)
+    self.kleur2 = color2
+end
+
+function Thema:setTextColor(textColor)
+    self.textKleur = textColor
+end
+
+function Thema:setBackgroundColor(backgroundColor)
+    self.achtergrond = backgroundColor
+end
