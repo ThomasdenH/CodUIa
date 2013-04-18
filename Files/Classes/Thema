@@ -22,3 +22,19 @@ end
 function Thema:setBackgroundColor(backgroundColor)
     self.achtergrond = backgroundColor
 end
+
+function Thema:getColor1()
+    return self.kleur1
+end
+
+function Thema:getColor2()
+    return self.kleur2
+end
+
+function Thema:getTextColor()
+    return self.textKleur
+end
+
+function Thema:getBackgroundColor()
+    return self.achtergrond
+end
