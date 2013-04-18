@@ -7,7 +7,11 @@ function UISystem:init()
 end
 
 function UISystem:addNotification(notification)
-    table.insert(self.meldingen, notification)
+    if type(notification) == "string" then
+        table.insert(self.meldingen, Melding(notification))
+    else
+        table.insert(self.meldingen, notification)
+    end
 end
 
 function UISystem:makeView(name, logic)
